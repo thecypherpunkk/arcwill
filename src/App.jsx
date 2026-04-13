@@ -209,9 +209,9 @@ function App() {
 
             {/* CENTER: Navigation Menu */}
             <div className="header-center main-nav-menu" style={{ display: 'flex', gap: '15px' }}>
-              <button className={mainNav === "swap" ? "tab active" : "tab"} onClick={function(){setMainNav("swap")}} style={{ margin: 0 }}>Swap</button>
-              <button className={mainNav === "bridge" ? "tab active" : "tab"} onClick={function(){setMainNav("bridge")}} style={{ margin: 0 }}>Bridge</button>
-              <button className={mainNav === "wills" ? "tab active" : "tab"} onClick={function(){setMainNav("wills")}} style={{ margin: 0 }}>Wills</button>
+              <button className={mainNav === "wills" ? "tab active" : "tab"} onClick={() => setMainNav("wills")} style={{ margin: 0 }}>Wills</button>
+              <button className={mainNav === "bridge" ? "tab active" : "tab"} onClick={() => setMainNav("bridge")} style={{ margin: 0 }}>Bridge</button>
+              <button className={mainNav === "swap" ? "tab active" : "tab"} onClick={() => setMainNav("swap")} style={{ margin: 0 }}>Swap</button>
             </div>
 
             {/* RIGHT: Links and Connect Wallet */}
