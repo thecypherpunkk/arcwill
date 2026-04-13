@@ -60,6 +60,18 @@ function ShaderBackground() {
 function UsdcIcon() { return <svg width="18" height="18" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#2775CA"/><path d="M21.2 18.2c0-2.2-1.3-2.9-3.8-3.2-1.8-.3-2.2-.7-2.2-1.5s.6-1.3 1.8-1.3c1.1 0 1.6.4 1.9 1.2.1.2.3.3.5.3h1.1c.3 0 .5-.2.5-.5v-.1c-.3-1.2-1.1-2.1-2.5-2.4v-1.4c0-.3-.2-.5-.5-.5h-1c-.3 0-.5.2-.5.5v1.3c-1.7.3-2.8 1.4-2.8 2.8 0 2.1 1.3 2.8 3.8 3.2 1.7.3 2.2.8 2.2 1.6s-.8 1.4-1.9 1.4c-1.5 0-2-.6-2.2-1.3-.1-.2-.3-.4-.5-.4h-1.2c-.3 0-.5.2-.5.5v.1c.3 1.3 1.3 2.2 2.9 2.5v1.4c0 .3.2.5.5.5h1c.3 0 .5-.2.5-.5v-1.4c1.8-.2 2.9-1.4 2.9-2.9z" fill="#fff"/></svg> }
 function EurcIcon() { return <svg width="18" height="18" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#2775CA"/><text x="16" y="21" textAnchor="middle" fill="#fff" fontSize="16" fontWeight="700" fontFamily="Arial">€</text></svg> }
 
+// Coming Soon Component
+function ComingSoon(props) {
+  return (
+    <div className="card glass" style={{ textAlign: 'center', padding: '100px 20px', minHeight: '40vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+      <h2 style={{ fontSize: '3rem', marginBottom: '15px', background: 'linear-gradient(to right, #6366f1, #a855f7)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+        {props.title}
+      </h2>
+      <p style={{ fontSize: '1.2rem', color: '#a0aec0' }}>This feature is coming soon to ArcWill!</p>
+    </div>
+  );
+}
+
 function App() {
   var { address, isConnected } = useAccount()
   var [contract, setContract] = useState(null)
@@ -70,6 +82,10 @@ function App() {
   var [wills, setWills] = useState([])
   var [loading, setLoading] = useState(false)
   var [status, setStatus] = useState("")
+  
+  // Main Nav State
+  var [mainNav, setMainNav] = useState("wills") // "swap", "bridge", "wills"
+  
   var [activeTab, setActiveTab] = useState("create")
   var [beneficiary, setBeneficiary] = useState("")
   var [amount, setAmount] = useState("")
@@ -180,24 +196,40 @@ function App() {
       <ShaderBackground />
       <div className="app-content">
         <header className="header">
-          <div className="header-content">
-            <div className="header-row">
+          <div className="header-content" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+            
+            {/* LEFT: Logo and Testnet */}
+            <div className="header-left">
               <div className="logo">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="11" width="18" height="11" rx="2" stroke="#6366f1" strokeWidth="2"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="#6366f1" strokeWidth="2" strokeLinecap="round"/></svg>
                 <h1>ArcWill</h1>
                 <span className="badge">TESTNET</span>
               </div>
-              <div className="header-links">
+            </div>
+
+            {/* CENTER: Navigation Menu */}
+            <div className="header-center main-nav-menu" style={{ display: 'flex', gap: '15px' }}>
+              <button className={mainNav === "swap" ? "tab active" : "tab"} onClick={function(){setMainNav("swap")}} style={{ margin: 0 }}>Swap</button>
+              <button className={mainNav === "bridge" ? "tab active" : "tab"} onClick={function(){setMainNav("bridge")}} style={{ margin: 0 }}>Bridge</button>
+              <button className={mainNav === "wills" ? "tab active" : "tab"} onClick={function(){setMainNav("wills")}} style={{ margin: 0 }}>Wills</button>
+            </div>
+
+            {/* RIGHT: Links and Connect Wallet */}
+            <div className="header-right" style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+              <div className="header-links" style={{ display: 'flex', gap: '15px' }}>
                 <a href="https://faucet.circle.com" target="_blank" rel="noopener noreferrer" className="header-link">Faucet</a>
                 <a href="https://docs.arc.network" target="_blank" rel="noopener noreferrer" className="header-link">Docs</a>
                 <a href="https://testnet.arcscan.app" target="_blank" rel="noopener noreferrer" className="header-link">Explorer</a>
               </div>
               <ConnectButton />
             </div>
+
           </div>
         </header>
 
         <main className="main">
+          {/* Dashboard is shown if 'Wills' is active, otherwise Coming Soon */}
+          {mainNav === "wills" ? (
             <>
               <div className="info-cards">
                 <div className="info-card glass"><span className="info-label">Wallet</span><span className="info-value">{shortAddr(address)}</span></div>
@@ -296,6 +328,9 @@ function App() {
                 </div>
               )}
             </>
+          ) : (
+             <ComingSoon title={mainNav === "swap" ? "Swap" : "Bridge"} />
+          )}
           {status&&<div className="status-bar glass">{status}</div>}
         </main>
         <footer className="footer"><p>ArcWill — USDC & EURC Digital Asset Vault on Arc Network</p></footer>
